@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html, body{
+            height:100%;
+            display:flex;
+            align-items: center;
+            justify-content: center;
+            font-family: monospace;
+        }
+        .calculator{
+            width:400px;
+            height:500px;
+            background-color: black;
+            border: 10px solid rgba(47, 47, 47, 1);
+            border-radius: 4px;
+            display:flex;
+            flex-direction: column;
+        }
+        .screen{
+            padding: 5px;
+            background-color: #b2b9b7;
+            display:flex;
+            justify-content: flex-end;
+            font-size: 65px;
+            text-shadow: 1.3px 1.3px #383838;
+            margin:5px;
+        }
+        .button{
+            display:flex;
+            flex-wrap: wrap;
+            gap:2px;
+        }
+        button{
+            font-size: 25px;
+            padding:20px;
+            flex: 1 1 98px;
+            height:79px;
+            border-radius: 5px;
+            border:0px;
+        }
+        .zero{
+            flex-grow: 150;
+        }
+        .function{
+            background-color: dodgerblue;
+        }
+        .operator{
+            background-color: #FF8F1F;
+        }
+        .equal{
+            background-color: #FF8F1F;
+        }
+        .number{
+            background-color:#217C7E;
+        }
+        .function:active{
+            background-color: rgb(123, 189, 255);
+        }
+        .operator:active{
+            background-color: #ffc183;
+        }
+        .number:active{
+            background-color: #33b9bb;
+        }
+        .equal:active{
+            background-color: #ffc183;
+        }
+        
+    </style>
+    <title>Calculator</title>
+</head>
+<body>
+    <div class="calculator">
+        <div class="screen">0</div>
+        <div class="button">
+            <button class="delete function">AC</button>
+            <button class="changeSign function">+/-</button>
+            <button class="percentage function">%</button>
+            <button class="divide operator">/</button>
+            <button class="seven number">7</button>
+            <button class="eight number">8</button>
+            <button class="nine number">9</button>
+            <button class="time operator">*</button>
+            <button class="four number">4</button>
+            <button class="five number">5</button>
+            <button class="six number">6</button>
+            <button class="minus operator">-</button>
+            <button class="one number">1</button>
+            <button class="two number">2</button>
+            <button class="three number">3</button>
+            <button class="plus operator">+</button>
+            <button class="zero number">0</button>
+            <button class="decimal number">.</button>
+            <button class="equal">=</button>
+        </div>
+    </div>
+    </body>
+
+    <script>
+        let firstNum;
+        let operatorSign;
+        let secondNum;
+
+        function add(a, b){
+            return a + b;
+        }
+        function subtract(a, b){
+            return a - b;
+        }
+        function multiply(a, b){
+            return a * b;
+        }
+        function divide(a, b){
+            return a / b;
+        }
+        function operate(operator, a, b){
+            if(operator === "+"){
+                return add(a, b);
+            } else if (operator === "-"){
+                return subtract(a, b);
+            } else if (operator === "*"){
+                return multiply(a, b);
+            } else if (operator === "/"){
+                return b === 0 ? "lmao":(divide(a, b)).toPrecision(2);
+
+            }
+        }
+        let firstClick = true;
+        let operatorClicked = false;
+        let numberClicked = 0;
+        const numberButton = document.querySelectorAll('.number');
+        const screen = document.querySelector('.screen');
+        numberButton.forEach(button => {
+            button.addEventListener("click", () => {
+                if (numberClicked < 9){
+                    let number = button.textContent;
+                if(operatorClicked == false){
+                    if(firstClick){
+                    screen.textContent = number;
+                    firstClick = false;
+                    } else {
+                    screen.textContent += number;
+                    }
+                    firstNum = screen.textContent;
+                    console.log(firstNum);
+                } else {
+                    if(firstClick){
+                    screen.textContent = number;
+                    firstClick = false;
+                    } else {
+                    screen.textContent += number;
+                    }
+                    secondNum = screen.textContent;
+                    console.log(secondNum);
+                }
+                numberClicked++;
+                }
+            });
+        });
+        //Ignore the equal sign for now
+        const operatorButton = document.querySelectorAll('.operator');
+        operatorButton.forEach(operator => {
+            operator.addEventListener("click", () => {
+                operatorSign = operator.textContent;
+                operatorClicked = true;
+                firstClick = true;
+                console.log(operatorSign);
+                numberClicked = 0;
+            });
+        });
+
+        operatorButton.forEach(operator => {
+            operator.addEventListener("click", () => {
+                if(operatorSign != undefined && firstNum != undefined && secondNum != undefined){
+                const result = operate(operatorSign, parseFloat(firstNum), parseFloat(secondNum));
+                console.log(result);
+                screen.textContent = result;
+                firstClick = true;
+                firstNum = result;
+                secondNum = undefined;
+                numberClicked = 0;
+            }
+            });
+        });
+
+        const equalButton = document.querySelector('.equal');
+        equalButton.addEventListener("click", () => {
+            if(operatorSign != undefined && firstNum != undefined && secondNum != undefined){
+                const result = operate(operatorSign, parseFloat(firstNum), parseFloat(secondNum));
+                console.log(result);
+                screen.textContent = result;
+                firstClick = true;
+                firstNum = result;
+                secondNum = undefined;
+                numberClicked = 0;
+            }
+        });
+
+        const ac = document.querySelector('.delete');
+        ac.addEventListener("click", () => {
+            screen.textContent = "0";
+            firstNum = undefined;
+            operatorSign = undefined;
+            secondNum = undefined;
+            firstClick = true;
+            operatorClicked = false;
+            numberClicked = 0;
+        });
+        
+    </script>
+</body>
+</html>
